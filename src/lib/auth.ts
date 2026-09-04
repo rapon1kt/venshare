@@ -12,7 +12,7 @@ const authOptions = {
     maxAge: 30 * 24 * 60 * 60,
     updateAge: 24 * 60 * 60,
   },
-  pages: { signIn: "/sign-in", error: "/sign-in", signOut: "/sign-out" },
+  pages: { signIn: "/" },
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.id = user.id;

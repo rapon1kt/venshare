@@ -3,12 +3,11 @@ import { NextAuthRequest } from "next-auth";
 import { NextResponse } from "next/server";
 
 const publicRoutes = [
-  { pathName: "/", whenAuthenticated: "next" },
-  { pathName: "/sign-in", whenAuthenticated: "redirect" },
+  { pathName: "/", whenAuthenticated: "redirect" },
   { pathName: "/sign-up", whenAuthenticated: "redirect" },
 ] as const;
 
-const REDIRECT_WHEN_NOT_AUTHENTICATED_PATH = "/sign-in";
+const REDIRECT_WHEN_NOT_AUTHENTICATED_PATH = "/";
 
 export default auth(async function proxy(req: NextAuthRequest) {
   const pathName = req.nextUrl.pathname;

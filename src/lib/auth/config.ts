@@ -1,18 +1,17 @@
-import clientPromise from "./mongodb";
-import GitHub from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
-import NextAuth, { NextAuthConfig } from "next-auth";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import { NextAuthConfig } from "next-auth";
+import clientPromise from "../db/mongodb";
+import { createProviders } from "./providers";
 
-const authOptions = {
+export const nextAuthConfig = {
   adapter: MongoDBAdapter(clientPromise),
-  providers: [GitHub, Google],
+  providers: createProviders(),
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
     updateAge: 24 * 60 * 60,
   },
-  pages: { signIn: "/sign-in" },
+  pages: { signIn: "/sign-in", error: "/sign-in " },
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.id = user.id;
@@ -24,5 +23,3 @@ const authOptions = {
     },
   },
 } satisfies NextAuthConfig;
-
-export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);

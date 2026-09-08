@@ -8,11 +8,11 @@ const authOptions = {
   adapter: MongoDBAdapter(clientPromise),
   providers: [GitHub, Google],
   session: {
-    strategy: "database",
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
     updateAge: 24 * 60 * 60,
   },
-  pages: { signIn: "/" },
+  pages: { signIn: "/sign-in" },
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.id = user.id;

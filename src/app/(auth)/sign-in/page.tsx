@@ -66,6 +66,12 @@ export default function SignIn() {
             {isPending ? "Loading..." : "Sign In"}
           </button>
           <Link
+            href="/sign-up"
+            className="transition bg-white/5 hover:bg-white/10 text-center cursor-pointer text-sm w-full rounded-lg py-2 text-white/80"
+          >
+            Create new account
+          </Link>
+          <Link
             href="/forgot-password"
             className="w-fit text-xs text-white/60 underline"
           >

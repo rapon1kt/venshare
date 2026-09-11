@@ -1,4 +1,4 @@
-import { findUserByEmail } from "@/repositories/user-repository";
+import { findUserByEmailWithPassword } from "@/repositories/user-repository";
 import { verifyPassword } from "@/lib/password/password";
 
 interface IUser {
@@ -12,11 +12,11 @@ export async function authenticateUser(
   email: string,
   password: string,
 ): Promise<IUser | null> {
-  const user = await findUserByEmail(email);
+  const user = await findUserByEmailWithPassword(email);
 
   if (!user || !user.password) return null;
 
-  const isPasswordValid = verifyPassword(password, user.password);
+  const isPasswordValid = await verifyPassword(password, user.password);
 
   if (!isPasswordValid) return null;
 

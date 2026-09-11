@@ -1,20 +1,31 @@
 "use server";
 import { signIn } from "@/lib/auth";
-import { signInSchema } from "@/schemas/sign-in-schema";
 import { AuthError } from "next-auth";
+import { signInSchema } from "@/schemas/sign-in-schema";
 
-export interface ActionState {
-  error: string | null;
-}
+type AuthProperties = {
+  name?: { errors: string[] };
+  email?: { errors: string[] };
+  password?: { errors: string[] };
+  confirmPassword?: { errors: string[] };
+};
+
+export type AuthState = {
+  sucess: boolean;
+  message: string;
+  errors?: AuthProperties;
+};
+
+type AuthResponse = Promise<AuthState>;
 
 export async function handleSignIn(
-  _prevState: ActionState | null,
+  _prevState: AuthState | null,
   formData: FormData,
-): Promise<ActionState> {
+): Promise<AuthResponse> {
   const providerId = formData.get("providerId")?.toString();
 
   if (!providerId) {
-    return { error: "Invalid sign-in method." };
+    return { sucess: false, message: "Invalid sign-in method." };
   }
 
   try {
@@ -26,7 +37,7 @@ export async function handleSignIn(
       redirectTo: "/",
     });
 
-    return { error: null };
+    return { sucess: true, message: "Welcome back!" };
   } catch (error) {
     return handleSignInError(error);
   }
@@ -34,7 +45,7 @@ export async function handleSignIn(
 
 async function handleCredentialsSignIn(
   formData: FormData,
-): Promise<ActionState> {
+): Promise<AuthResponse> {
   const credentials = signInSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -42,7 +53,8 @@ async function handleCredentialsSignIn(
 
   if (!credentials.success) {
     return {
-      error: "Please provide a valid email and password.",
+      sucess: false,
+      message: "Invalid credentials.",
     };
   }
 
@@ -51,20 +63,21 @@ async function handleCredentialsSignIn(
     redirectTo: "/",
   });
 
-  return { error: null };
+  return { sucess: true, message: "Welcome back!" };
 }
 
-function handleSignInError(error: unknown): ActionState {
+function handleSignInError(error: unknown): AuthState {
   if (!(error instanceof AuthError)) {
     throw error;
   }
 
   switch (error.type) {
     case "CredentialsSignin":
-      return { error: "Invalid credentials." };
+      return { sucess: false, message: "Invalid credentials." };
     default:
       return {
-        error: "Something went wrong. Try again later.",
+        sucess: false,
+        message: "Something went wrong. Try again later.",
       };
   }
 }

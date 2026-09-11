@@ -1,7 +1,9 @@
 "use server";
+import z from "zod";
 import { signIn } from "@/lib/auth";
 import { AuthError } from "next-auth";
-import { signInSchema } from "@/schemas/sign-in-schema";
+import { signUpUser } from "@/services/auth";
+import { signUpSchema, signInSchema } from "@/schemas";
 
 type AuthProperties = {
   name?: { errors: string[] };
@@ -79,5 +81,61 @@ function handleSignInError(error: unknown): AuthState {
         sucess: false,
         message: "Something went wrong. Try again later.",
       };
+  }
+}
+
+export async function handleSignUp(
+  _prevState: AuthState | null,
+  formData: FormData,
+): AuthResponse {
+  const rawData = {
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
+  };
+
+  const validatedFields = signUpSchema.safeParse(rawData);
+
+  if (!validatedFields.success) {
+    return {
+      sucess: false,
+      message: "Invalid fields value.",
+      errors: z.treeifyError(validatedFields.error).properties,
+    };
+  }
+
+  try {
+    const { name, email, password } = validatedFields.data;
+
+    await signUpUser({
+      name,
+      email,
+      password,
+    });
+
+    await signIn("credentials", {
+      email,
+      password,
+    });
+
+    return {
+      sucess: true,
+      message: `Welcome, ${name}!`,
+    };
+  } catch (error) {
+    if (error instanceof Error && error.message === "EMAIL_ALREADY_EXISTS") {
+      return {
+        sucess: false,
+        message: "An account with this email already exists.",
+      };
+    }
+
+    console.error("An unexpected error occurred: ", error);
+
+    return {
+      sucess: false,
+      message: "Something went wrong while creating your account.",
+    };
   }
 }

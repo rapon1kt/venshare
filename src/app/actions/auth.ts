@@ -124,18 +124,22 @@ export async function handleSignUp(
       message: `Welcome, ${name}!`,
     };
   } catch (error) {
-    if (error instanceof Error && error.message === "EMAIL_ALREADY_EXISTS") {
+    return handleSignUpError(error);
+  }
+}
+
+function handleSignUpError(error: unknown): AuthState {
+  if (!(error instanceof AuthError)) {
+    throw error;
+  }
+
+  switch (error.type) {
+    case "CredentialsSignin":
+      return { sucess: false, message: "Invalid credentials." };
+    default:
       return {
         sucess: false,
-        message: "An account with this email already exists.",
+        message: "Something went wrong. Try again later.",
       };
-    }
-
-    console.error("An unexpected error occurred: ", error);
-
-    return {
-      sucess: false,
-      message: "Something went wrong while creating your account.",
-    };
   }
 }

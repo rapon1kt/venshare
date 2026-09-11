@@ -55,7 +55,7 @@ const authMessages: Record<string, AuthMessage> = {
   },
 };
 
-export function getAuthMessage(error?: string): AuthMessage | null {
+export function getAuthMessage(error: string | null): AuthMessage | null {
   if (!error) return null;
 
   return (

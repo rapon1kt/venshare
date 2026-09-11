@@ -10,3 +10,25 @@ export async function findUserByEmailWithPassword(email: string) {
   await dbConnect();
   return UserModel.findOne({ email }).select("+password").lean();
 }
+
+export async function findUserById(id: string) {
+  await dbConnect();
+
+  return UserModel.findById(id).lean();
+}
+
+export async function createUser(data: {
+  name: string;
+  email: string;
+  password: string;
+}) {
+  await dbConnect();
+
+  const user = await UserModel.create({
+    name: data.name,
+    email: data.email,
+    password: data.password,
+  });
+
+  return user;
+}

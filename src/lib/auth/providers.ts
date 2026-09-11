@@ -1,8 +1,8 @@
 import { Provider } from "next-auth/providers";
-import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { signInSchema } from "@/schemas/sign-in-schema";
+import Credentials from "next-auth/providers/credentials";
 import { authenticateUser } from "@/services/auth/authenticate-user";
 
 export const createProviders = (): Provider[] => [
@@ -14,7 +14,10 @@ export const createProviders = (): Provider[] => [
 
       if (!validated.success) return null;
 
-      return authenticateUser(validated.data.email, validated.data.password);
+      return await authenticateUser(
+        validated.data.email,
+        validated.data.password,
+      );
     },
   }),
 ];

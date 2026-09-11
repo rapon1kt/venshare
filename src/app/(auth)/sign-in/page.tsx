@@ -1,11 +1,15 @@
 "use client";
 import Link from "next/link";
 import { useActionState } from "react";
-import { AlertCircle } from "lucide-react";
-import { ActionState, handleSignIn } from "@/app/actions/auth";
+import { AuthState, handleSignIn } from "@/app/actions/auth";
 import { GitHubIcon, GoogleIcon } from "@/components/provider-icons";
+import { AuthAlert } from "@/components/alert/auth-alert";
 
-const initialState: ActionState = { error: null };
+const initialState: AuthState = {
+  message: "",
+  sucess: false,
+  errors: undefined,
+};
 
 export default function SignIn() {
   const [state, formAction, isPending] = useActionState(
@@ -22,15 +26,10 @@ export default function SignIn() {
             Continue to share and explore content with other people.
           </p>
         </div>
+        <AuthAlert authState={state} />
         <form className="flex flex-col w-full gap-4" action={formAction}>
           <input type="hidden" name="providerId" value="credentials" />
           <div className="flex flex-col gap-2">
-            {state?.error && (
-              <div className="flex items-center gap-2 p-4 bg-red-400/15 border border-red-400/10 text-sm text-red-200 rounded-md">
-                <AlertCircle size={16} />
-                {state.error}
-              </div>
-            )}
             <div className="flex flex-col gap-1">
               <label className="text-white/70 text-base" htmlFor="email">
                 Email

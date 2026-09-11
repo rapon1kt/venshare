@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useActionState } from "react";
-import { AuthState, handleSignIn } from "@/app/actions/auth";
-import { GitHubIcon, GoogleIcon } from "@/components/provider-icons";
+import { useSearchParams } from "next/navigation";
 import { AuthAlert } from "@/components/alert/auth-alert";
+import { AuthState, handleSignIn } from "@/app/actions/auth";
+import { getAuthMessage } from "@/utils/auth-param-callbacks";
+import { GitHubIcon, GoogleIcon } from "@/components/provider-icons";
 
 const initialState: AuthState = {
   message: "",
@@ -12,6 +14,11 @@ const initialState: AuthState = {
 };
 
 export default function SignIn() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+
+  const authMessage = getAuthMessage(error);
+
   const [state, formAction, isPending] = useActionState(
     handleSignIn,
     initialState,
@@ -26,7 +33,7 @@ export default function SignIn() {
             Continue to share and explore content with other people.
           </p>
         </div>
-        <AuthAlert authState={state} />
+        <AuthAlert authState={state} authMessage={authMessage} />
         <form className="flex flex-col w-full gap-4" action={formAction}>
           <input type="hidden" name="providerId" value="credentials" />
           <div className="flex flex-col gap-2">

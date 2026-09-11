@@ -5,6 +5,16 @@ import { AuthError } from "next-auth";
 import { signUpUser } from "@/services/auth";
 import { signUpSchema, signInSchema } from "@/schemas";
 
+export async function signInWithGoogle() {
+  "use server";
+  await signIn("google", { redirectTo: "/" });
+}
+
+export async function signInWithGitHub() {
+  "use server";
+  await signIn("github", { redirectTo: "/" });
+}
+
 type AuthProperties = {
   name?: { errors: string[] };
   email?: { errors: string[] };

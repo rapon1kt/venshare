@@ -73,7 +73,7 @@ export default function SignIn() {
           </button>
           <Link
             href="/sign-up"
-            className="transition bg-white/5 hover:bg-white/10 text-center cursor-pointer text-sm w-full rounded-lg py-2 text-white/80"
+            className="bg-linear-to-r from-white/3 via-white/7 to-white/3 bg-size-[200%_auto] bg-position-[0%_center] hover:bg-position-[100%_center] transition-[background-position] duration-500 ease-in-out text-center cursor-pointer text-sm w-full block rounded-lg py-2 text-white/80"
           >
             Create new account
           </Link>

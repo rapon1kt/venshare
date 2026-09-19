@@ -41,4 +41,4 @@ const userSchema = new Schema<IUser>(
 );
 
 export const UserModel: Model<IUser> =
-  mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+  mongoose.models.User ?? mongoose.model<IUser>("User", userSchema);

@@ -1,9 +1,10 @@
-import { AuthState } from "@/app/actions/auth";
+import { SignInState } from "@/app/actions/auth/sign-in";
+import { SignUpState } from "@/app/actions/auth/sign-up";
 import { AuthMessage, getFieldErrors } from "@/utils";
 import { AlertCircleIcon, CheckCircle } from "lucide-react";
 
 type AuthAlertProps = {
-  authState?: AuthState;
+  authState?: SignInState | SignUpState;
   authMessage?: AuthMessage | null;
 };
 

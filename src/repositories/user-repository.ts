@@ -32,3 +32,17 @@ export async function createUser(data: {
 
   return user;
 }
+
+export async function updateUserPassword(data: {
+  id: string;
+  newPassword: string;
+}) {
+  await dbConnect();
+
+  await UserModel.updateOne(
+    { id: data.id },
+    {
+      $set: { password: data.newPassword },
+    },
+  );
+}

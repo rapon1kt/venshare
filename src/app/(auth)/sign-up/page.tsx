@@ -1,16 +1,12 @@
 "use client";
-import { useActionState } from "react";
-import {
-  AuthState,
-  handleSignUp,
-  signInWithGitHub,
-  signInWithGoogle,
-} from "@/app/actions/auth";
 import Link from "next/link";
+import { useActionState } from "react";
 import { AuthAlert } from "@/components/alert/auth-alert";
 import { GitHubIcon, GoogleIcon } from "@/components/provider-icons";
+import { SignUpState, handleSignUp } from "@/app/actions/auth/sign-up";
+import { signInWithGitHub, signInWithGoogle } from "@/app/actions/auth/sign-in";
 
-const initialState: AuthState = {
+const initialState: SignUpState = {
   message: "",
   sucess: false,
   errors: undefined,

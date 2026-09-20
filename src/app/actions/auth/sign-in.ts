@@ -1,9 +1,7 @@
 "use server";
-import z from "zod";
 import { signIn } from "@/lib/auth";
 import { AuthError } from "next-auth";
-import { signUpUser } from "@/services/auth";
-import { signUpSchema, signInSchema } from "@/schemas";
+import { signInSchema } from "@/schemas";
 
 export async function signInWithGoogle() {
   "use server";
@@ -15,23 +13,22 @@ export async function signInWithGitHub() {
   await signIn("github", { redirectTo: "/" });
 }
 
-type AuthProperties = {
+type SignInProperties = {
   name?: { errors: string[] };
   email?: { errors: string[] };
   password?: { errors: string[] };
-  confirmPassword?: { errors: string[] };
 };
 
-export type AuthState = {
+export type SignInState = {
   sucess: boolean;
   message: string;
-  errors?: AuthProperties;
+  errors?: SignInProperties;
 };
 
-type AuthResponse = Promise<AuthState>;
+type AuthResponse = Promise<SignInState>;
 
 export async function handleSignIn(
-  _prevState: AuthState | null,
+  _prevState: SignInState | null,
   formData: FormData,
 ): Promise<AuthResponse> {
   const providerId = formData.get("providerId")?.toString();
@@ -78,67 +75,7 @@ async function handleCredentialsSignIn(
   return { sucess: true, message: "Welcome back!" };
 }
 
-function handleSignInError(error: unknown): AuthState {
-  if (!(error instanceof AuthError)) {
-    throw error;
-  }
-
-  switch (error.type) {
-    case "CredentialsSignin":
-      return { sucess: false, message: "Invalid credentials." };
-    default:
-      return {
-        sucess: false,
-        message: "Something went wrong. Try again later.",
-      };
-  }
-}
-
-export async function handleSignUp(
-  _prevState: AuthState | null,
-  formData: FormData,
-): AuthResponse {
-  const rawData = {
-    name: formData.get("name"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-    confirmPassword: formData.get("confirmPassword"),
-  };
-
-  const validatedFields = signUpSchema.safeParse(rawData);
-
-  if (!validatedFields.success) {
-    return {
-      sucess: false,
-      message: "Invalid fields value.",
-      errors: z.treeifyError(validatedFields.error).properties,
-    };
-  }
-
-  try {
-    const { name, email, password } = validatedFields.data;
-
-    await signUpUser({
-      name,
-      email,
-      password,
-    });
-
-    await signIn("credentials", {
-      email,
-      password,
-    });
-
-    return {
-      sucess: true,
-      message: `Welcome, ${name}!`,
-    };
-  } catch (error) {
-    return handleSignUpError(error);
-  }
-}
-
-function handleSignUpError(error: unknown): AuthState {
+function handleSignInError(error: unknown): SignInState {
   if (!(error instanceof AuthError)) {
     throw error;
   }

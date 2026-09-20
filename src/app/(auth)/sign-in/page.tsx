@@ -3,11 +3,11 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AuthAlert } from "@/components/alert/auth-alert";
-import { AuthState, handleSignIn } from "@/app/actions/auth";
 import { getAuthMessage } from "@/utils/auth-param-callbacks";
 import { GitHubIcon, GoogleIcon } from "@/components/provider-icons";
+import { handleSignIn, SignInState } from "@/app/actions/auth/sign-in";
 
-const initialState: AuthState = {
+const initialState: SignInState = {
   message: "",
   sucess: false,
   errors: undefined,

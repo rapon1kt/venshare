@@ -40,7 +40,7 @@ export async function updateUserPassword(data: {
   await dbConnect();
 
   await UserModel.updateOne(
-    { id: data.id },
+    { _id: data.id },
     {
       $set: { password: data.newPassword },
     },

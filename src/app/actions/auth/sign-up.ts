@@ -71,6 +71,7 @@ function handleSignUpError(error: unknown): SignUpState {
   }
 
   switch (error.type) {
+    case "EmailSignInError":
     case "CredentialsSignin":
       return { sucess: false, message: "Invalid credentials." };
     default:

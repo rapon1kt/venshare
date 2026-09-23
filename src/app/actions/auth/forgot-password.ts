@@ -32,11 +32,7 @@ export async function forgotPasswordAction(
     if (user) {
       const resetUrl = await generatePasswordResetToken(user._id.toString());
 
-      await sendEmail(
-        user.email,
-        "Password Reset Request",
-        `Click to reset: ${resetUrl}`,
-      );
+      await sendEmail({ name: user.name, email: user.email }, resetUrl);
     }
 
     return {

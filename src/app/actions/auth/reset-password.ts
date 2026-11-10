@@ -10,7 +10,7 @@ type ResetProperties = {
   confirmNewPassword?: { errors: string[] };
 };
 
-interface ResetPasswordState {
+export interface ResetPasswordState {
   success: boolean;
   message?: string;
   errors?: ResetProperties;

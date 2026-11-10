@@ -18,10 +18,13 @@ export default function SideBar({ name }: { name: string }) {
   return (
     <aside className="flex flex-col justify-between p-8 w-67 h-[94vh] border-r border-white/10">
       <div>
-        <button className="mb-4 text-sm hover:bg-white/10 cursor-pointer bg-white/5 text-white/60 flex w-full gap-2 items-center justify-center py-1.5 rounded-md">
+        <Link
+          href="/write"
+          className="mb-4 text-sm hover:bg-white/10 cursor-pointer bg-white/5 text-white/60 flex w-full gap-2 items-center justify-center py-1.5 rounded-md"
+        >
           <SquarePen size={18} />
           Write
-        </button>
+        </Link>
         <ul className="space-y-2">
           {links(name).map((link) => (
             <li
